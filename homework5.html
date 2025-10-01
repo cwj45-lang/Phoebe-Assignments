@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>John Doe — Portfolio (Filler)</title>
+  <style>
+    /* ---------- Basic / Reset ---------- */
+    :root{
+      --bg:#f5f7fb; --card:#ffffff; --accent:#2b6cb0; --muted:#6b7280;
+      --nav-width:260px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background:var(--bg); color:#111827; line-height:1.4;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    a{color:var(--accent); text-decoration:none}
+    img{max-width:100%;display:block}
+
+    /* ---------- Page Grid Layout ---------- */
+    .page {
+      min-height:100vh;
+      display:grid;
+      grid-template-areas:
+        "header header"
+        "sidebar main"
+        "footer footer";
+      grid-template-columns: var(--nav-width) 1fr;
+      grid-template-rows: auto 1fr auto;
+      gap:20px;
+    }
+
+    header.site-header{
+      grid-area:header;
+      position:sticky; top:0; z-index:20;
+      background:linear-gradient(90deg,#ffffffcc, #f0f4ffcc);
+      backdrop-filter: blur(6px);
+      border-bottom:1px solid #e6e9ef;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 20px;
+    }
+    header .brand{display:flex;gap:12px;align-items:center}
+    header .brand h1{font-size:1.1rem;margin-bottom:2px}
+    header nav.topnav{
+      display:flex; gap:8px; align-items:center;
+      flex:1; justify-content:center;
+    }
+    /* Top nav uses flex with equal items */
+    header nav.topnav a{flex:1;text-align:center;padding:8px 12px;border-radius:8px}
+    header nav.topnav a:hover{background:#eef5ff}
+
+    /* ---------- Sidebar (Left Navigation) ---------- */
+    aside.sidebar{
+      grid-area:sidebar;
+      background:var(--card);
+      padding:18px;
+      border-radius:12px;
+      box-shadow: 0 6px 20px rgba(30,50,80,0.06);
+      position:relative;
+      display:flex;
+      flex-direction:column; /* vertical layout via flexbox */
+      align-items:flex-start;
+      gap:12px;
+      height:calc(100vh - 150px);
+      overflow:auto;
+    }
+    /* Sidebar nav is a flex container arranging items vertically */
+    .sidebar nav{display:flex;flex-direction:column;gap:8px;width:100%}
+    .sidebar nav a{
+      padding:10px 12px;border-radius:8px;
+      display:flex; align-items:center; gap:10px;
+      color:#0f172a; text-decoration:none;
+    }
+    .sidebar nav a:hover{background:#f1f9ff}
+    /* Download Resume button positioned absolute inside left nav as requested */
+    .download-btn{
+      position:absolute;
+      left:24px; bottom:20px;
+      background:var(--accent); color:white;
+      padding:10px 14px; border-radius:10px;
+      display:inline-block;
+      text-decoration:none;
+      box-shadow: 0 6px 18px rgba(43,108,176,0.18);
+      transition:transform .18s ease, box-shadow .18s ease, background .18s;
+    }
+    .download-btn:hover{ transform:translateY(-3px) scale(1.02); box-shadow:0 10px 28px rgba(43,108,176,0.24) }
+
+    /* ---------- Main Content ---------- */
+    main.main{
+      grid-area:main;
+      padding:20px;
+      overflow:auto;
+    }
+    .container{
+      max-width:1100px;margin:0 auto; display:flex; flex-direction:column; gap:18px;
+    }
+
+    /* Summary Card */
+    .hero{
+      background:var(--card); padding:20px; border-radius:12px;
+      box-shadow: 0 6px 18px rgba(25,40,70,0.04);
+      display:grid; grid-template-columns: 1fr 220px; gap:20px; align-items:center;
+    }
+    .hero h2{font-size:1.6rem;margin-bottom:6px}
+    .hero p{color:var(--muted)}
+    .hero .avatar{justify-self:end}
+
+    /* ---------- Skills Section (Flex & Grid) ---------- */
+    .skills{
+      background:var(--card); padding:18px; border-radius:12px;
+      display:flex; flex-direction:column; gap:12px;
+    }
+    .skills-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap:12px;
+    }
+    .skill-card{
+      background:#f8fafc;padding:12px;border-radius:10px;
+      text-align:center; transition:transform .25s ease, box-shadow .25s ease;
+      cursor:default;
+    }
+    /* transform + transition effects on hover (Step: transforms/transitions) */
+    .skill-card:hover{
+      transform:scale(1.05);
+      box-shadow: 0 8px 30px rgba(15,23,42,0.07);
+      border-radius:14px;
+    }
+    .skill-card h4{font-size:0.95rem;margin-bottom:6px}
+    .skill-meta{font-size:0.85rem;color:var(--muted)}
+
+    /* ---------- Projects (Grid inside) ---------- */
+    .projects{
+      background:var(--card); padding:18px; border-radius:12px; overflow:hidden;
+      display:grid; gap:14px;
+    }
+    .projects-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-auto-rows: auto;
+      gap:14px;
+    }
+    .project{
+      background:#fff;padding:14px;border-radius:10px; box-shadow:0 6px 16px rgba(12,18,30,0.04);
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .project h3{margin-bottom:6px}
+    .project .proj-images{overflow:hidden}
+    /* float images horizontally (Step: float) */
+    .proj-images img{float:left;margin-right:8px;width:33%;height:100px;object-fit:cover;transition:transform .25s ease, opacity .25s;}
+    .proj-images img:hover{transform:scale(1.06);opacity:0.95}
+
+    /* Project descriptions */
+    .project p{color:var(--muted)}
+
+    /* Make sure floats don't break layout */
+    .clearfix::after{content:"";display:table;clear:both}
+
+    /* ---------- Education & Experience (Table) ---------- */
+    .edu-exp{
+      background:var(--card); padding:18px; border-radius:12px;
+      box-shadow:0 6px 18px rgba(20,30,50,0.03);
+    }
+    table.edu-table{width:100%;border-collapse:collapse}
+    table.edu-table th, table.edu-table td{padding:10px;border-bottom:1px solid #eef2f7;text-align:left}
+    table.edu-table th{background:#f7fbff;font-weight:600}
+
+    /* ---------- Contact / Footer ---------- */
+    footer.site-footer{
+      grid-area:footer; position:fixed; bottom:0; left:0; right:0;
+      background:linear-gradient(180deg,#fff,#f8fafc);
+      border-top:1px solid #e6e9ef; padding:10px 20px;
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+    }
+    .contact-list{display:flex;gap:12px;align-items:center}
+    .contact-list a{font-size:0.95rem;color:var(--muted)}
+
+    /* ---------- Responsive Media Queries (Step: Responsive Design) ---------- */
+    @media (max-width:1024px){
+      .page{grid-template-columns: 220px 1fr}
+      .hero{grid-template-columns:1fr 160px}
+    }
+    @media (max-width:768px){
+      .page{grid-template-areas:
+        "header"
+        "main"
+        "sidebar"
+        "footer";
+        grid-template-columns:1fr; grid-template-rows:auto 1fr auto auto;
+      }
+      aside.sidebar{height:auto; order:3}
+      .hero{grid-template-columns:1fr}
+      header nav.topnav{display:none}
+      .download-btn{position:static;margin-top:6px;align-self:flex-start}
+    }
+    @media (max-width:480px){
+      :root{--nav-width:100%}
+      .proj-images img{width:48%;height:90px}
+      .projects-grid{grid-template-columns:1fr}
+      .skills-grid{grid-template-columns: repeat(auto-fill, minmax(140px, 1fr))}
+    }
+
+    /* ---------- Additional layout helpers for Flexbox main container and header/footer flex ---------- */
+    .main-flex{
+      display:flex; flex-wrap:wrap; gap:16px;
+      align-items:flex-start; justify-content:space-between;
+    }
+    header .brand small{display:block;color:var(--muted);font-size:0.8rem}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header (fixed/sticky) -->
+    <header class="site-header" role="banner">
+      <div class="brand">
+        <div style="width:44px;height:44px;background:linear-gradient(135deg,#2b6cb0,#7dd3fc);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700">JD</div>
+        <div>
+          <h1 style="font-size:1rem">John Doe</h1>
+          <small>Aspiring Software Engineer · Frontend & UX Enthusiast</small>
+        </div>
+      </div>
+
+      <!-- Flexbox nav (spread evenly) -->
+      <nav class="topnav" aria-label="Top Navigation">
+        <a href="#summary">Summary</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#education">Education</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+    </header>
+
+    <!-- Sidebar (left) with flexbox vertical nav -->
+    <aside class="sidebar" aria-label="Sidebar Navigation">
+      <h2 style="font-size:1.05rem;margin-bottom:6px">Navigation</h2>
+      <nav>
+        <a href="#summary">🔎 Summary</a>
+        <a href="#education">🎓 Education</a>
+        <a href="#skills">🧰 Skills</a>
+        <a href="#projects">📁 Projects</a>
+        <a href="#experience">💼 Experience</a>
+        <a href="#contact"✉️ Contact</a>
+      </nav>
+
+      <!-- Resume button positioned absolute in left nav -->
+      <a class="download-btn" href="https://drive.google.com/file/d/1dOw8Q3uk0RGwFpx0-kep9ZTTz8et-5lc/view?usp=drive_link">
+        ⬇️ Download Resume
+      </a>
+
+      <!-- small contact quick links -->
+      <div style="margin-top:14px;font-size:0.95rem;color:var(--muted)">
+        <div><strong>Quick Contact</strong></div>
+        <div style="margin-top:8px">
+          <div>Email: <a href="mailto:johndoe@example.com">johndoe@example.com</a></div>
+          <div>Phone: <a href="tel:+1234567890">+1 (234) 567-890</a></div>
+          <div>GitHub: <a href="https://github.com/johndoe" target="_blank" rel="noreferrer">github.com/johndoe</a></div>
+          <div>LinkedIn: <a href="https://linkedin.com/in/johndoe" target="_blank" rel="noreferrer">linkedin.com/in/johndoe</a></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main" role="main">
+      <div class="container">
+
+        <!-- Summary / Intro -->
+        <section id="summary" class="hero" aria-labelledby="summary-title">
+          <div>
+            <h2 id="summary-title">Hi — I'm John Doe</h2>
+            <h3 style="font-size:1rem;color:var(--muted);margin-bottom:10px">Frontend-focused developer building usable interfaces and delightful user experiences.</h3>
+            <p>
+              I am a fictional full-stack engineer with a focus on modern frontend technologies, responsive design, and accessibility.
+              I love turning complex problems into simple, beautiful interfaces. My interests include progressive web apps, UI animation, and performance optimization.
+            </p>
+            <p style="margin-top:8px;color:var(--muted)"><strong>Location:</strong> Phoenix, AZ · <strong>Available for:</strong> Freelance & full-time</p>
+          </div>
+          <div class="avatar">
+            <img src="https://avatars.githubusercontent.com/u/29063?v=4?text=Avatar" alt="John Doe avatar" style="border-radius:12px;box-shadow:0 8px 22px rgba(12,18,30,0.06)">
+          </div>
+        </section>
+
+        <!-- Skills -->
+        <section id="skills" class="skills" aria-labelledby="skills-title">
+          <h2 id="skills-title">Skills</h2>
+          <p style="color:var(--muted)">Organized into categories — hover any skill to see a small interactive effect.</p>
+
+          <!-- Grouped skill lists (ordered/unordered) -->
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <div style="flex:1;min-width:220px">
+              <h4>Frameworks & Libraries</h4>
+              <ul>
+                <li>React</li>
+                <li>Next.js</li>
+                <li>Vue.js (familiar)</li>
+              </ul>
+            </div>
+            <div style="flex:1;min-width:220px">
+              <h4>Tools & Platforms</h4>
+              <ol>
+                <li>Git & GitHub</li>
+                <li>Vercel / Netlify</li>
+                <li>Figma</li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- Skills presented using CSS Grid (also used with flexbox parent) -->
+          <div class="skills-grid" style="margin-top:8px">
+            <div class="skill-card"><h4>HTML</h4><div class="skill-meta">Semantic markup & accessibility</div></div>
+            <div class="skill-card"><h4>CSS</h4><div class="skill-meta">Grid, Flexbox, Transitions</div></div>
+            <div class="skill-card"><h4>JavaScript</h4><div class="skill-meta">ES6+, DOM, Fetch</div></div>
+            <div class="skill-card"><h4>Responsive Design</h4><div class="skill-meta">Media queries, mobile-first</div></div>
+            <div class="skill-card"><h4>Testing</h4><div class="skill-meta">Jest, React Testing Library</div></div>
+            <div class="skill-card"><h4>Soft Skills</h4><div class="skill-meta">Communication · Teamwork</div></div>
+          </div>
+        </section>
+
+        <!-- Projects with Grid layout and images (2-3 images per project) -->
+        <section id="projects" class="projects" aria-labelledby="projects-title">
+          <h2 id="projects-title">Projects Showcase</h2>
+          <p style="color:var(--muted)">Each project includes multiple images and a short description.</p>
+
+          <div class="projects-grid">
+            <!-- Project A -->
+            <article class="project">
+              <h3>Project A — UI Library (Fictional)</h3>
+              <div class="proj-images clearfix" aria-hidden="false">
+                <img src="https://static.vecteezy.com/system/resources/thumbnails/024/608/132/small_2x/chipmunk-dinner-close-up-photo.jpg?text=UI+1" alt="UI library screenshot 1" />
+                <img src="https://thumbs.dreamstime.com/b/funny-face-12963753.jpg?text=UI+2" alt="UI library screenshot 2" />
+              </div>
+              <p>
+                A component-driven UI library focused on accessibility and performance. Built with modular CSS and
+                tested across devices. (Filler description)
+              </p>
+            </article>
+
+            <!-- Project B -->
+            <article class="project">
+              <h3>Project B — E-commerce Demo</h3>
+              <div class="proj-images clearfix">
+                <img src="https://interestingmag.com/wp-content/uploads/2021/09/funny_and_weird_stock_photos_70.jpg?text=Shop+1" alt="E-commerce screenshot 1" />
+                <img src="https://i.pinimg.com/736x/a8/cb/7e/a8cb7e10a19c4692d7e59294ffd5bc18.jpg?text=Shop+2" alt="E-commerce screenshot 2" />
+              </div>
+              <p>
+                Mock e-commerce site demonstrating cart UX, product filtering, and PWA features. Implemented with a
+                responsive grid and lazy-loaded assets.
+              </p>
+            </article>
+
+            <!-- Project C -->
+            <article class="project">
+              <h3>Project C — Analytics Dashboard</h3>
+              <div class="proj-images clearfix">
+                <img src="https://c8.alamy.com/comp/G28428/funny-man-in-large-suit-posing-at-camera-G28428.jpg?text=Dash+1" alt="Dashboard screenshot 1" />
+                <img src="https://img.freepik.com/premium-photo/funny-man-posing-large-costume-carnival_263872-3981.jpg?text=Dash+2" alt="Dashboard screenshot 2" />
+              </div>
+              <p>
+                Data visualization dashboard with charts, filters, and export features. Focused on fast rendering of large datasets.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <!-- Education & Experience: Table decorated -->
+        <section id="education" class="edu-exp" aria-labelledby="edu-title">
+          <h2 id="edu-title">Education & Experience</h2>
+          <p style="color:var(--muted)">Structured using an HTML table for clarity.</p>
+
+          <!-- Table for education -->
+          <h3 style="margin-top:10px">Education</h3>
+          <table class="edu-table" aria-describedby="edu-title">
+            <thead>
+              <tr><th>Institution</th><th>Degree</th><th>Duration</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>State University (Fictional)</td>
+                <td>BSc Computer Science</td>
+                <td>2016 — 2020</td>
+              </tr>
+              <tr>
+                <td>Online Academy</td>
+                <td>Certificate: Frontend Web</td>
+                <td>2021</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Table for experience -->
+          <h3 style="margin-top:14px">Experience</h3>
+          <table class="edu-table">
+            <thead>
+              <tr><th>Company</th><th>Position</th><th>Duration</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Acme Co. (Fictional)</td>
+                <td>Frontend Developer</td>
+                <td>2020 — 2022</td>
+              </tr>
+              <tr>
+                <td>Beta Studio</td>
+                <td>UI Engineer</td>
+                <td>2022 — Present</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Experience section (anchor) -->
+        <section id="experience" class="edu-exp" style="margin-top:12px">
+          <h2>Experience Details</h2>
+          <p style="color:var(--muted)">A short list of responsibilities and achievements.</p>
+          <ul>
+            <li>Led frontend rewrite to React and reduced bundle size by 32%.</li>
+            <li>Built accessibility improvements raising automated a11y score from 72 → 92.</li>
+            <li>Collaborated with product and design on a major redesign project.</li>
+          </ul>
+        </section>
+
+        <!-- Contact placed in main too for completeness (but footer has contact as requested) -->
+        <section id="contact" style="background:var(--card);padding:18px;border-radius:12px">
+          <h2>Contact Information</h2>
+          <p style="color:var(--muted)">Multiple ways to reach me — links provided for direct action.</p>
+
+          <p>
+            <strong>Email:</strong> <a href="mailto:johndoe@example.com">johndoe@example.com</a><br />
+            <strong>Phone:</strong> <a href="tel:+1234567890">+1 (234) 567-890</a><br />
+            <strong>GitHub:</strong> <a href="https://github.com/johndoe">github.com/johndoe</a><br />
+            <strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/johndoe">linkedin.com/in/johndoe</a><br />
+          </p>
+
+          <p style="margin-top:8px;color:var(--muted)">Download my resume: <a href="https://drive.google.com/file/d/1dOw8Q3uk0RGwFpx0-kep9ZTTz8et-5lc/view?usp=drive_link" download>John_Doe_Resume.pdf</p>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Footer fixed -->
+    <footer class="site-footer" role="contentinfo">
+      <div style="display:flex;gap:12px;align-items:center">
+        <div style="font-weight:600">John Doe</div>
+        <div style="color:var(--muted)">— Fictional Portfolio · 2025</div>
+      </div>
+      <div class="contact-list" id="contact-footer">
+        <a href="mailto:johndoe@example.com">✉️ johndoe@example.com</a>
+        <a href="tel:+1234567890">📞 +1 (234) 567-890</a>
+        <a href="https://github.com/johndoe" target="_blank" rel="noreferrer">💻 GitHub</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Smooth scrolling for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', function(e){
+        // If it's an in-page anchor, smooth scroll
+        const href = this.getAttribute('href');
+        if(href.startsWith("#")){
+          const target = document.querySelector(href);
+          if(target){
+            e.preventDefault();
+            target.scrollIntoView({behavior:'smooth', block:'start'});
+          }
+        }
+      });
+    });
+
+    // Simple keyboard accessibility: focus outline for keyboard users
+    document.body.addEventListener('keydown', (e)=>{
+      if(e.key === "Tab") document.documentElement.classList.add('show-focus');
+    });
+  </script>
+</body>
+</html>
